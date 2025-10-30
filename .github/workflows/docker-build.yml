@@ -1,40 +1,59 @@
 # .github/workflows/docker-build.yml
 
-name: Build Docker Image and Run Tests
+name: Build, Test, and Deploy Results
 
 on:
-  # Run this on 'push' to the main branch
   push:
     branches: [ main, master ]
-  # Also allow running it manually from the "Actions" tab
   workflow_dispatch:
 
-jobs:
-  build-and-test:
-    # Run this on the latest Ubuntu server
-    runs-on: ubuntu-latest
+# Add permissions for the job to write to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
+jobs:
+  build-test-and-deploy:
+    runs-on: ubuntu-latest
     steps:
-      # 1. Check out your code (including the Dockerfile)
+      # 1. Check out code
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # 2. Set up Docker's build-in-cache system
+      # 2. Set up Java
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # 3. Run 'mvn test'. This runs the tests
+      #    and generates reports in 'target/surefire-reports'
+      - name: Run tests and generate reports
+        run: mvn test
+
+      # 4. Upload the test reports folder as a Pages artifact
+      - name: Upload test reports
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # This is the folder Maven saves reports to
+          path: 'target/surefire-reports'
+
+      # 5. Also build the Docker image to prove it works
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 3. This is the command that does all the work
-      - name: Build and test Docker image
+      - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
-          # Tell it where your Dockerfile is
           context: .
           file: ./Dockerfile
-
-          # This is the key: push: false
-          # This tells the action to ONLY build the image and NOT push it to a registry.
-          # The build itself will run the 'mvn package' and tests.
           push: false
-
-          # Give the image a tag
           tags: message-router:latest
+
+      # 6. Deploy the uploaded reports to GitHub Pages
+      - name: Deploy test results to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
