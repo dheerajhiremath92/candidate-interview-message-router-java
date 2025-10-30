@@ -21,7 +21,7 @@ public class MessageRouterTest {
 
     @BeforeEach
     void setUp() {
-        router = MessageRouter.create();
+        router = new MessageRouterImpl();
     }
 
     @AfterEach
