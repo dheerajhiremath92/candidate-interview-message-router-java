@@ -4,7 +4,7 @@ name: Build Docker Image and Run Tests
 on:
   push:
     branches: [ main, master ]
-  # This 'workflow_dispatch' is what makes the "Run" button work
+  # This 'workflow_dispatch' is what makes  the "Run" button work
   workflow_dispatch:
 
 jobs:
