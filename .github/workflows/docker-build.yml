@@ -41,7 +41,7 @@ jobs:
           # This is the folder Maven saves reports to
           path: 'target/surefire-reports'
 
-      # 5. Also build the Docker image to prove it works
+      # 5. build the Docker image to prove it works
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
