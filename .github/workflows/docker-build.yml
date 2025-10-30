@@ -33,7 +33,7 @@ jobs:
       - name: Run tests and generate reports
         run: mvn test
 
-      # 4. --- NEW STEP ---
+      # 4. --- FIX IS IN THIS STEP ---
       #    This creates the index.html file inside the reports folder
       - name: Generate Test Report index.html
         run: |
@@ -42,7 +42,8 @@ jobs:
           for file in target/surefire-reports/*; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
-              echo "<li><a href=\"$filename\">$filename</a></li>" >> target/surepre-reports/index.html
+              # --- THIS IS THE LINE I FIXED ---
+              echo "<li><a href=\"$filename\">$filename</a></li>" >> target/surefire-reports/index.html
             fi
           done
           echo "</ul></body></html>" >> target/surefire-reports/index.html
