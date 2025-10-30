@@ -9,6 +9,7 @@
         .container { text-align: left; background-color: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 700px; width: 90%; }
         h1 { text-align: center; color: #24292e; margin-bottom: 24px; }
         h2 { color: #24292e; border-bottom: 2px solid #e1e4e8; padding-bottom: 10px; margin-top: 40px; }
+        p, li { font-size: 1.05em; line-height: 1.6; }
         .status-badge { display: block; text-align: center; margin-bottom: 30px; }
         .button-group { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
         .button { display: inline-block; padding: 14px 28px; font-size: 1em; font-weight: bold; color: #fff; text-decoration: none; border-radius: 8px; transition: background-color 0.2s; }
@@ -17,6 +18,9 @@
         ul.test-list { list-style-type: none; padding-left: 0; }
         ul.test-list li { background-color: #f6f8fa; padding: 12px 15px; border-radius: 6px; margin-bottom: 8px; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 0.95em; color: #333; }
         ul.test-list li::before { content: "✓"; color: #28a745; font-weight: bold; margin-right: 12px; }
+        code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; background-color: #f6f8fa; padding: 3px 6px; border-radius: 5px; font-size: 0.9em; }
+        pre.code-block { background-color: #24292e; color: #f6f8fa; padding: 20px; border-radius: 8px; overflow-x: auto; }
+        pre.code-block code { background: none; padding: 0; }
     </style>
 </head>
 <body>
@@ -37,7 +41,7 @@
     </div>
 
     <h2>Test Coverage</h2>
-    <p>The following tests are run in the CI pipeline (from <code>MessageRouterTest.java</code>):</p>
+    <p>The following tests from <code>MessageRouterTest.java</code> are run in the CI pipeline:</p>
     <ul class="test-list">
         <li>Basic subscribe and publish functionality</li>
         <li>Multiple subscribers receive the same message</li>
@@ -49,6 +53,18 @@
         <li>Router close behavior</li>
         <li>Performance test with many subscribers</li>
     </ul>
+
+    <h2>Run Locally with Docker</h2>
+    <p>If you prefer to run the tests on your own machine, you can use the provided <code>Dockerfile</code>. This will compile the code, run the entire test suite, and build the final image.</p>
+    <p><strong>Prerequisites:</strong> Docker Desktop must be installed and running.</p>
+
+    <ol>
+        <li>Clone this repository to your local machine.</li>
+        <li>Open your terminal and navigate to the root of the project (the same folder as <code>Dockerfile</code> and <code>pom.xml</code>).</li>
+        <li>Run the following command:</li>
+    </ol>
+    <pre class="code-block"><code>docker build -t message-router .</code></pre>
+    <p>The test results will be printed to your terminal. If the build succeeds, all tests have passed.</p>
 </div>
 </body>
 </html>
