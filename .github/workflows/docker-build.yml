@@ -33,20 +33,42 @@ jobs:
       - name: Run tests and generate reports
         run: mvn test
 
-      # 4. --- FIX IS IN THIS STEP ---
-      #    This creates the index.html file inside the reports folder
-      - name: Generate Test Report index.html
+      # 4. --- THIS IS THE UPGRADED STEP ---
+      #    This creates a styled index.html page
+      - name: Generate Stylish Test Report index.html
         run: |
-          echo "<html><head><title>Test Reports</title></head><body>" > target/surefire-reports/index.html
-          echo "<h1>Test Reports</h1><ul>" >> target/surefire-reports/index.html
+          # Start the HTML file with a <style> block for a modern look
+          echo '<!DOCTYPE html>' > target/surefire-reports/index.html
+          echo '<html lang="en"><head><meta charset="UTF-8">' >> target/surefire-reports/index.html
+          echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">' >> target/surefire-reports/index.html
+          echo '<title>Test Reports</title><style>' >> target/surefire-reports/index.html
+          echo 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 90vh; background-color: #f6f8fa; color: #24292e; margin: 0; }' >> target/surefire-reports/index.html
+          echo '.container { text-align: center; background-color: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 600px; width: 90%; }' >> target/surefire-reports/index.html
+          echo 'h1 { color: #24292e; margin-bottom: 24px; }' >> target/surefire-reports/index.html
+          echo 'ul { list-style-type: none; padding: 0; margin: 0; }' >> target/surefire-reports/index.html
+          echo 'li { margin: 12px 0; }' >> target/surefire-reports/index.html
+          echo 'a { text-decoration: none; color: #0366d6; font-size: 1.1em; font-weight: 500; display: block; padding: 12px; border: 1px solid #ddd; border-radius: 6px; transition: all 0.2s ease-in-out; }' >> target/surefire-reports/index.html
+          echo 'a:hover { background-color: #f6f8fa; border-color: #0366d6; }' >> target/surefire-reports/index.html
+          echo '</style></head><body>' >> target/surefire-reports/index.html
+          
+          # Add the content
+          echo '<div class="container">' >> target/surefire-reports/index.html
+          echo '<h1>Test Run Results</h1>' >> target/surefire-reports/index.html
+          echo '<ul>' >> target/surefire-reports/index.html
+          
+          # Loop through files and create list items
           for file in target/surefire-reports/*; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
-              # --- THIS IS THE LINE I FIXED ---
-              echo "<li><a href=\"$filename\">$filename</a></li>" >> target/surefire-reports/index.html
+              # Skip the index.html file itself
+              if [ "$filename" != "index.html" ]; then
+                echo "<li><a href=\"$filename\">$filename</a></li>" >> target/surefire-reports/index.html
+              fi
             fi
           done
-          echo "</ul></body></html>" >> target/surefire-reports/index.html
+          
+          # Close tags
+          echo '</ul></div></body></html>' >> target/surefire-reports/index.html
 
       # 5. Upload the test reports folder (which now includes index.html)
       - name: Upload test reports
