@@ -32,8 +32,7 @@ jobs:
           file: ./Dockerfile
 
           # This is the key: push: false
-          # This tells the action to ONLY build the image
-          # and NOT push it to a registry.
+          # This tells the action to ONLY build the image and NOT push it to a registry.
           # The build itself will run the 'mvn package' and tests.
           push: false
 
